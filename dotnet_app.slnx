@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="dotnet_app.client/dotnet_app.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="dotnet_app.Server/dotnet_app.Server.csproj" />
+</Solution>
