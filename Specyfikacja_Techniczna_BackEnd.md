@@ -12,12 +12,19 @@ Do realizacji projektu użyto darmowych narzędzi i bibliotek wspierających śr
 * **Entity Framework Core (EF Core):** System typu ORM (Object-Relational Mapping), ułatwiający obsługę bazy danych z poziomu kodu obiektowego.
 * **Microsoft.EntityFrameworkCore.Sqlite:** Provider bazy danych pozwalający aplikacji na łączenie się i tworzenie lekkiej, plikowej bazy danych **SQLite** (dzięki czemu aplikacja nie wymaga instalacji oddzielnego silnika bazy danych).
 * **ASP.NET Core Identity:** Gotowy zestaw narzędzi ułatwiający zarządzanie użytkownikami (tworzenie, haszowanie haseł i weryfikacja logowania).
-* **Mechanizm Cookie Authentication:** Wbudowany w framework mechanizm uwierzytelniania oparty na ciasteczkach sesyjnych (HttpOnly, Secure, SameSite=Strict). Zastąpił on architekturę JWT w celu ochrony aplikacji przed atakami typu XSS i zwiększenia ogólnego poziomu bezpieczeństwa.
+* **Mechanizm Cookie Authentication:** Wbudowany w framework mechanizm uwierzytelniania oparty na ciasteczkach sesyjnych (HttpOnly, Secure, SameSite=Strict). Zastastanawiałem się jescze nad architekturą JWT, ale ostatecznie się zdecydowałem nie komplikować nadmiernie zadania.
 * **Swashbuckle (Swagger):** Narzędzie generujące interaktywną dokumentację API (dostępną pod adresem `/swagger/index.html`), ułatwiające przeglądanie oraz testowanie endpointów.
 
 ## 2. Baza danych (SQLite)
 
 Aplikacja korzysta z pliku bazodanowego `contacts.db`. Baza ta jest automatycznie tworzona podczas pierwszego uruchomienia aplikacji. Inicjowana jest wtedy również domyślnymi słownikami. W bazie wdrożono unikalny indeks zapobiegający dublowaniu się wartości `Email` w tabeli z kontaktami.
+Dzięki użyciu **Entity Framework Core (EF Core)** podmiana bazy danych w przeszłoście jest banalnie prosta. Wystarczy zmodyfikować `appsettings.json`:
+
+```json
+"ConnectionStrings": {
+   "DefaultConnection": "Host=url;Database=name;Username=login;Password=pass"
+}
+```
 
 ---
 
@@ -49,7 +56,7 @@ Aplikacja korzysta z pliku bazodanowego `contacts.db`. Baza ta jest automatyczni
    Reprezentują systemowe słowniki opcji dostępne dla kontaktów. Tabele te są powiązane kaskadową relacją (jedna kategoria może posiadać wiele podkategorii).
 
 6. **`Contact`**
-   Centralna encja bazy danych w systemie. 
+   Centralna encja bazy danych w systemie.
    * Definiuje podstawowe pola (Imię, Nazwisko, Email, Data urodzenia, Telefon) oraz relacje zdefiniowane za pomocą kluczy obcych (`CategoryId` oraz w uzasadnionych przypadkach powiązane ID słownikowej podkategorii lub alternatywnie tekst w polu `CustomSubcategory`).
 
 ### B. Warstwa kontrolerów (Katalog `Controllers`)
@@ -137,7 +144,6 @@ Zainstalowane w systemie środowisko uruchomieniowe **.NET 10 SDK**.
 
 Po wywołaniu `dotnet run`, środowisko samo upewni się, że baza danych `contacts.db` istnieje (jeśli nie, utworzy plik wraz z nową strukturą), pobierze lub wygeneruje dane startowe dla słowników i nasłuchuje zapytań HTTP wysłanych przez frontend. Automatycznie zostanie udostępniona interaktywna dokumentacja Swagger pod adresem `https://localhost:<port>/swagger` (w środowisku developerskim).
 
-Aplikacja była testowana na systemie Windows 11.
- nie, utworzy plik wraz z nową strukturą), pobierze lub wygeneruje dane startowe dla słowników i nasłuchuje zapytań HTTP wysłanych przez frontend. Automatycznie zostanie udostępniona interaktywna dokumentacja Swagger pod adresem `https://localhost:<port>/swagger` (w środowisku developerskim).
+---
 
 Aplikacja była testowana na systemie Windows 11.

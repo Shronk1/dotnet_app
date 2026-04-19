@@ -62,12 +62,3 @@ Po zakończeniu publikacji, cała Twoja aplikacja (Backend + Frontend) znajduje 
     * **Linux/macOS:** `dotnet ./dotnet_app.Server.dll`
 
 Aplikacja będzie teraz dostępna pod adresem URL wskazanym w konsoli (domyślnie `http://localhost:5000` lub `https://localhost:5001`).
-
----
-
-## 5. Kluczowe różnice w trybie Produkcyjnym
-
-1. **Brak Vite Proxy:** Na produkcji serwer .NET sam serwuje pliki Reacta. Nie jest wymagane uruchamianie `npm run dev`.
-2. **Bezpieczeństwo Ciasteczek:** Aplikacja wymusza przesyłanie ciasteczek autoryzacyjnych przez bezpieczne połączenie (HTTPS). Wdrożenie na serwer zewnętrzny wymaga posiadania certyfikatu SSL.
-3. **Baza danych:** Aplikacja produkcyjna utworzy plik `contacts.db` w swoim folderze uruchomieniowym przy pierwszym starcie (chyba że w `appsettings.json` wskazano inną ścieżkę).
-4. **Błędy 404:** Dzięki konfiguracji `MapFallbackToFile`, odświeżanie strony na zagnieżdżonych ścieżkach Reacta (np. `/contacts/1/edit`) działa poprawnie – serwer wie, że ma zawsze zwrócić `index.html`.
