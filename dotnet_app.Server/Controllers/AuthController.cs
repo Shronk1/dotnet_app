@@ -1,10 +1,8 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using dotnet_app.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace dotnet_app.Server.Controllers
 {
@@ -13,12 +11,12 @@ namespace dotnet_app.Server.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IConfiguration _configuration;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public AuthController(UserManager<IdentityUser> userManager, IConfiguration configuration)
+        public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             _userManager = userManager;
-            _configuration = configuration;
+            _signInManager = signInManager;
         }
 
         [HttpPost("register")]
@@ -34,8 +32,8 @@ namespace dotnet_app.Server.Controllers
 
             if (result.Succeeded)
             {
-                var token = GenerateJwtToken(user);
-                return Ok(new { token });
+                await _signInManager.SignInAsync(user, isPersistent: true);
+                return Ok(new { message = "Pomyślnie zarejestrowano i zalogowano." });
             }
 
             foreach (var error in result.Errors)
@@ -54,40 +52,28 @@ namespace dotnet_app.Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, lockoutOnFailure: false);
+            if (result.Succeeded)
             {
-                var token = GenerateJwtToken(user);
-                return Ok(new { token });
+                return Ok(new { message = "Pomyślnie zalogowano." });
             }
 
             return Unauthorized(new { message = "Nieprawidłowy adres email lub hasło." });
         }
 
-        private string GenerateJwtToken(IdentityUser user)
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout()
         {
-            var jwtSettings = _configuration.GetSection("Jwt");
-            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings["Key"]!));
+            await _signInManager.SignOutAsync();
+            return Ok(new { message = "Pomyślnie wylogowano." });
+        }
 
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Email, user.Email!)
-            };
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(2),
-                Issuer = jwtSettings["Issuer"],
-                Audience = jwtSettings["Audience"],
-                SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return tokenHandler.WriteToken(token);
+        [HttpGet("me")]
+        [Authorize]
+        public IActionResult GetCurrentUser()
+        {
+            return Ok(new { email = User.FindFirstValue(ClaimTypes.Email) ?? User.Identity?.Name });
         }
     }
 }

@@ -12,7 +12,8 @@ Do realizacji projektu użyto darmowych narzędzi i bibliotek wspierających śr
 * **Entity Framework Core (EF Core):** System typu ORM (Object-Relational Mapping), ułatwiający obsługę bazy danych z poziomu kodu obiektowego.
 * **Microsoft.EntityFrameworkCore.Sqlite:** Provider bazy danych pozwalający aplikacji na łączenie się i tworzenie lekkiej, plikowej bazy danych **SQLite** (dzięki czemu aplikacja nie wymaga instalacji oddzielnego silnika bazy danych).
 * **ASP.NET Core Identity:** Gotowy zestaw narzędzi ułatwiający zarządzanie użytkownikami (tworzenie, haszowanie haseł i weryfikacja logowania).
-* **Microsoft.AspNetCore.Authentication.JwtBearer:** Biblioteka do obsługi zabezpieczeń z użyciem bezstanowych tokenów **JSON Web Token (JWT)**, ułatwiająca integrację architektury SPA z zabezpieczonym REST API.
+* **Mechanizm Cookie Authentication:** Wbudowany w framework mechanizm uwierzytelniania oparty na ciasteczkach sesyjnych (HttpOnly, Secure, SameSite=Strict). Zastąpił on architekturę JWT w celu ochrony aplikacji przed atakami typu XSS i zwiększenia ogólnego poziomu bezpieczeństwa.
+* **Swashbuckle (Swagger):** Narzędzie generujące interaktywną dokumentację API (dostępną pod adresem `/swagger/index.html`), ułatwiające przeglądanie oraz testowanie endpointów.
 
 ## 2. Baza danych (SQLite)
 
@@ -135,5 +136,8 @@ Zainstalowane w systemie środowisko uruchomieniowe **.NET 10 SDK**.
    ```
 
 Po wywołaniu `dotnet run`, środowisko samo upewni się, że baza danych `contacts.db` istnieje (jeśli nie, utworzy plik wraz z nową strukturą), pobierze lub wygeneruje dane startowe dla słowników i nasłuchuje zapytań HTTP wysłanych przez frontend. Automatycznie zostanie udostępniona interaktywna dokumentacja Swagger pod adresem `https://localhost:<port>/swagger` (w środowisku developerskim).
+
+Aplikacja była testowana na systemie Windows 11.
+ nie, utworzy plik wraz z nową strukturą), pobierze lub wygeneruje dane startowe dla słowników i nasłuchuje zapytań HTTP wysłanych przez frontend. Automatycznie zostanie udostępniona interaktywna dokumentacja Swagger pod adresem `https://localhost:<port>/swagger` (w środowisku developerskim).
 
 Aplikacja była testowana na systemie Windows 11.

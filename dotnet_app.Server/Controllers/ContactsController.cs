@@ -89,9 +89,22 @@ namespace dotnet_app.Server.Controllers
         public async Task<IActionResult> GetContact(int id)
         {
             var contact = await _context.Contacts
-                .Include(c => c.Category)
-                .Include(c => c.Subcategory)
-                .FirstOrDefaultAsync(c => c.Id == id);
+                .Where(c => c.Id == id)
+                .Select(c => new
+                {
+                    c.Id,
+                    c.FirstName,
+                    c.LastName,
+                    c.Email,
+                    c.Phone,
+                    c.BirthDate,
+                    c.CategoryId,
+                    Category = new { c.Category.Id, c.Category.Name },
+                    c.SubcategoryId,
+                    Subcategory = c.Subcategory != null ? new { c.Subcategory.Id, c.Subcategory.Name } : null,
+                    c.CustomSubcategory
+                })
+                .FirstOrDefaultAsync();
 
             if (contact == null)
             {
@@ -130,7 +143,7 @@ namespace dotnet_app.Server.Controllers
             _context.Contacts.Add(contact);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetContact), new { id = contact.Id }, contact);
+            return CreatedAtAction(nameof(GetContact), new { id = contact.Id }, new { id = contact.Id, message = "Kontakt został dodany." });
         }
 
         // PUT: api/Contacts/id
