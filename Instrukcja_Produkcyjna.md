@@ -35,15 +35,15 @@ Pierwszym krokiem jest skompilowanie kodu React do zoptymalizowanych plików sta
 
 Proces publikacji zbiera skompilowany kod serwera oraz zbudowany frontend w jednym folderze gotowym do wdrożenia.
 
-1. Przejdź do folderu serwera: `cd ../dotnet_app.Server`
+1. Przejdź do folderu serwera: `cd ./dotnet_app.Server`
 2. Wykonaj komendę publikacji:
 
     ```bash
-    dotnet publish -c Release -o ../publish
+    dotnet publish -c Release -o publish
     ```
 
     * `-c Release`: Optymalizuje kod pod kątem wydajności.
-    * `-o ../publish`: Wskazuje folder wyjściowy dla wszystkich plików produkcyjnych.
+    * `-o publish`: Wskazuje folder wyjściowy dla wszystkich plików produkcyjnych.
 
 ---
 
@@ -54,7 +54,7 @@ Po zakończeniu publikacji, cała Twoja aplikacja (Backend + Frontend) znajduje 
 1. Przejdź do folderu publikacji:
 
     ```bash
-    cd ../publish
+    cd publish
     ```
 
 2. Uruchom plik wykonywalny:

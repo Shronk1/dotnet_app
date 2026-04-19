@@ -19,6 +19,7 @@ namespace dotnet_app.Server.Controllers
             _signInManager = signInManager;
         }
 
+        // POST: api/Auth/register
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserDto model)
         {
@@ -29,6 +30,7 @@ namespace dotnet_app.Server.Controllers
 
             var user = new IdentityUser { UserName = model.Email, Email = model.Email };
             var result = await _userManager.CreateAsync(user, model.Password);
+            // CreateAsync automatycznie hashuje hasło, więc nie musimy tego robić ręcznie
 
             if (result.Succeeded)
             {
@@ -44,6 +46,7 @@ namespace dotnet_app.Server.Controllers
             return BadRequest(ModelState);
         }
 
+        // POST: api/Auth/login
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserDto model)
         {
@@ -61,6 +64,7 @@ namespace dotnet_app.Server.Controllers
             return Unauthorized(new { message = "Nieprawidłowy adres email lub hasło." });
         }
 
+        // POST: api/Auth/logout
         [HttpPost("logout")]
         [Authorize]
         public async Task<IActionResult> Logout()
@@ -69,6 +73,7 @@ namespace dotnet_app.Server.Controllers
             return Ok(new { message = "Pomyślnie wylogowano." });
         }
 
+        // GET: api/Auth/me
         [HttpGet("me")]
         [Authorize]
         public IActionResult GetCurrentUser()

@@ -1,4 +1,3 @@
-using System.Text;
 using dotnet_app.Server.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +17,9 @@ builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
         options.Cookie.SameSite = SameSiteMode.Strict;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+        // ciasteczko będzie "żyło" tylko 5 minut na cele pokazowe
         options.SlidingExpiration = true;
+        // każde żądanie odświeża czas życia ciasteczka
         options.Events.OnRedirectToLogin = context =>
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
